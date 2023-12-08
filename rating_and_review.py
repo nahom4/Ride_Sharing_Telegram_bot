@@ -44,7 +44,7 @@ async def review_handler(query : CallbackQuery, callback_data: MyCallback,state 
 
 @review_rating.message(UserState.review)
 async def review_handler(message : Message,state : FSMContext):
-    await message.answer("Please Provide a Review")
+    await message.answer("Please select Rating")
     await state.update_data(data= {"review" : message.text})
     markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="⭐️",callback_data=MyCallback(data="star_⭐️",id= 1).pack())],
     [InlineKeyboardButton(text="⭐️⭐️",callback_data=MyCallback(data="star_⭐️⭐️",id= 1).pack())],

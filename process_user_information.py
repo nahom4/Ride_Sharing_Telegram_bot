@@ -33,15 +33,19 @@ async def process_role(query : CallbackQuery, callback_data: MyCallback,state : 
     userId = data["userId"]
     user = User(userId=data["userId"],name=data["name"],role=data["role"])
     await add_user(user)
-    keyboard = InlineKeyboardMarkup(inline_keyboard=
-    [ [InlineKeyboardButton(text = "Book Ride 🚗", callback_data=MyCallback(data = "BookRide",id = userId).pack()), InlineKeyboardButton(text = "Change Profile 🔄", callback_data=MyCallback(data="Change Profile",id= userId).pack())],
-       [InlineKeyboardButton(text = "Review ⭐", callback_data= MyCallback(data= "Review",id= userId).pack()), InlineKeyboardButton(text = "History and Receipts 📜", callback_data= MyCallback(data = "History and Receipts",id = userId).pack())]]
-    )
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text = "🏠 Home",callback_data=MyCallback(data ="Menu",id = userId).pack())]])
     if callback_data.id == 2:
-        await query.message.reply("Choose an option:", reply_markup=keyboard)
+        await query.message.reply("Go to Menu:", reply_markup=keyboard)
     else:
         await query.message.reply("You will be notified when a passenger is available")
    
 
 
-    
+@process_user_info.callback_query(MyCallback.filter(F.data == "Menu"))
+async def handle_menu(query : CallbackQuery, callback_data: MyCallback,state : FSMContext):
+    userId = callback_data.id
+    keyboard = InlineKeyboardMarkup(inline_keyboard=
+    [ [InlineKeyboardButton(text = "Book Ride 🚗", callback_data=MyCallback(data = "BookRide",id = userId).pack()), InlineKeyboardButton(text = "Change Profile 🔄", callback_data=MyCallback(data="Change Profile",id= userId).pack())],
+       [InlineKeyboardButton(text = "Review ⭐", callback_data= MyCallback(data= "Review",id= userId).pack()), InlineKeyboardButton(text = "History and Receipts 📜", callback_data= MyCallback(data = "History and Receipts",id = userId).pack())]]
+    )
+    await query.message.reply("Choose an option:", reply_markup=keyboard)

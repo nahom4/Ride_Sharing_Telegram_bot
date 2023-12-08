@@ -45,17 +45,20 @@ router = Router()
 bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
 hashMap = dict()
 from call_back import MyCallback
-# storage = RedisStorage.from_url('redis://localhost:6379/0')
 
 @router.message(CommandStart())
 async def handle_initial_contact(message : Message):
+
+    userId = message.from_user.id
+    name  = await get_name(userId)
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text = "🏠 Home",callback_data=MyCallback(data ="Menu",id = userId).pack())]])
     markup = InlineKeyboardMarkup(inline_keyboard = [[
         InlineKeyboardButton(text="Signup 📝", callback_data =MyCallback(data="signup",id=1).pack())
     ]])
 
     await message.reply(
         "Welcome",
-        reply_markup=markup
+        reply_markup= keyboard if name else markup
     )
     
 @router.callback_query(MyCallback.filter(F.data == "alert driver"))
